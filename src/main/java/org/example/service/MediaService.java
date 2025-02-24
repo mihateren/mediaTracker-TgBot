@@ -2,6 +2,7 @@ package org.example.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.model.Media;
+import org.example.model.enums.MediaType;
 import org.example.repository.MediaRepository;
 import org.example.utils.HibernateUtil;
 
@@ -20,14 +21,17 @@ public class MediaService {
         return mediaRepository.getById(id);
     }
 
-    public List<Media> getAll() {
-        return mediaRepository.getAll();
+    public List<Media> getAllMedia(MediaType typeOfMedia) {
+        if (typeOfMedia == MediaType.FILM) {
+            return mediaRepository.getAllFilms();
+        } else if (typeOfMedia == MediaType.SERIES) {
+            return mediaRepository.getAllSeries();
+        }
+        return List.of();
     }
 
     public void delete(Media media) {
         mediaRepository.delete(media);
     }
-
-
 
 }

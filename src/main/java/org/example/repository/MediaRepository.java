@@ -40,9 +40,18 @@ public class MediaRepository {
         }
     }
 
-    public List<Media> getAll() {
+    public List<Media> getAllSeries() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from Media", Media.class).list();
+            return session.createQuery("from Media where type = 'SERIES'", Media.class).list();
+        } catch (HibernateException e) {
+            log.error("Error fetching all media", e);
+            throw e;
+        }
+    }
+
+    public List<Media> getAllFilms() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Media where type = 'FILM'", Media.class).list();
         } catch (HibernateException e) {
             log.error("Error fetching all media", e);
             throw e;

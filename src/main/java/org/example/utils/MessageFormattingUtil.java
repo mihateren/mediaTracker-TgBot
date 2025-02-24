@@ -2,8 +2,9 @@ package org.example.utils;
 
 import org.example.model.Genre;
 import org.example.model.Media;
+import org.example.model.enums.MediaType;
 
-public class FormatUtil {
+public class MessageFormattingUtil {
 
     public static String formatMedia(Media media) {
         StringBuilder formattedOutput = new StringBuilder();
@@ -39,4 +40,13 @@ public class FormatUtil {
 
         return formattedOutput.toString();
     }
+
+    public static String getSearchMessage(MediaType type) {
+        return type == MediaType.FILM ? "Ищу фильмы..." : "Ищу сериалы...";
+    }
+
+    public static String getNotFoundMessage(MediaType type) {
+        return type == MediaType.FILM ? "Список фильмов пуст." : "Список сериалов пуст.";
+    }
+
 }

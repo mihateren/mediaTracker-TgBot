@@ -7,12 +7,12 @@ CREATE TABLE IF NOT EXISTS media
     id              SERIAL PRIMARY KEY,
     name            VARCHAR(255) NOT NULL,
     description     TEXT,
-    release_country VARCHAR(255),
+    release_country TEXT,
     release_year    INT,
-    cover_image_url VARCHAR(255),
+    cover_image_url TEXT,
     creator_id      BIGINT,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    type            VARCHAR(50) CHECK (type IN ('film', 'series'))
+    type            VARCHAR(50) DEFAULT 'FILM' CHECK (type IN ('FILM', 'SERIES'))
 );
 
 CREATE TABLE IF NOT EXISTS genres
@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS media_genres
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id         BIGINT PRIMARY KEY,
-    username   VARCHAR(255),
+    id         SERIAL PRIMARY KEY,
+    username   VARCHAR(255) NOT NULL,
     first_name VARCHAR(255),
     last_name  VARCHAR(255)
 );

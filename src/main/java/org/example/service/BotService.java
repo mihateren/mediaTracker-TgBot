@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.bot.command.Commands;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -18,7 +20,9 @@ public class BotService {
 
     public void sendTextMessage(String chatId, String text) {
         try {
-            telegramClient.execute(new SendMessage(chatId, text));
+            SendMessage sendMessage = new SendMessage(chatId, text);
+            sendMessage.enableMarkdown(true);
+            telegramClient.execute(sendMessage);
         } catch (TelegramApiException exception) {
             log.error("Ошибка при отправке сообщения: {}", exception.getMessage());
         }
@@ -31,4 +35,17 @@ public class BotService {
         }
         sendTextMessage(chatId, helpMessage.toString());
     }
+
+    public void sendImageWithCaptionMessage(String chatId, String imageUrl, String caption) {
+        try {
+            SendPhoto sendPhotoWithCaption = new SendPhoto(chatId, new InputFile(imageUrl));
+            sendPhotoWithCaption.setCaption(caption);
+            sendPhotoWithCaption.setParseMode("Markdown");
+            telegramClient.execute(sendPhotoWithCaption);
+        } catch (TelegramApiException exception) {
+            log.error("Ошибка при отправке фото с надписью: {}", exception.getMessage());
+        }
+    }
+
+
 }

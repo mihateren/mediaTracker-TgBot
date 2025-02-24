@@ -3,14 +3,20 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.bot.command.Commands;
+import org.example.model.Media;
 import org.example.service.BotService;
+import org.example.service.MediaService;
+import org.example.utils.FormatUtil;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 public class BotController {
 
     private final BotService botService;
+    private final MediaService mediaService = new MediaService();
 
     public void handleMessage(Message message) {
         String chatId = message.getChatId().toString();
@@ -32,6 +38,15 @@ public class BotController {
                     break;
                 case GET_ALL_SERIES:
                     botService.sendTextMessage(chatId, "Вот список всех сериалов...");
+                    List<Media> series = mediaService.getAll();
+                    for (Media media : series) {
+                        if (media.getCoverImageUrl() != null) {
+                            String mediaCaption = FormatUtil.formatMedia(media);
+                            botService.sendImageWithCaptionMessage(chatId, media.getCoverImageUrl(), mediaCaption);
+                        } else {
+                            botService.sendTextMessage(chatId, FormatUtil.formatMedia(media));
+                        }
+                    }
                     break;
                 case GET_ALL_FILMS:
                     botService.sendTextMessage(chatId, "Вот список всех фильмов...");

@@ -3,6 +3,8 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.bot.command.Commands;
+import org.example.bot.keyboard.KeyboardStorage;
+import org.example.model.Media;
 import org.example.model.enums.MediaType;
 import org.example.service.BotService;
 import org.example.service.MediaService;
@@ -12,13 +14,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 public class BotController {
 
     private final BotService botService;
-    private final MediaService mediaService = new MediaService();
+    private final MediaService mediaService;
 
     public void handleMessage(Message message) {
         String chatId = message.getChatId().toString();
@@ -68,30 +71,21 @@ public class BotController {
     }
 
     private void handleGetAllMedia(MediaType typeOfMedia, String chatId, boolean asList) {
-        String searchMessage = MessageFormattingUtil.getSearchMessage(typeOfMedia);
-        botService.sendTextMessage(chatId, searchMessage);
+        List<Media> mediaList = mediaService.getAllMedia(typeOfMedia);
 
-        var mediaList = mediaService.getAllMedia(typeOfMedia);
         if (mediaList.isEmpty()) {
-            String notFoundMessage = MessageFormattingUtil.getNotFoundMessage(typeOfMedia);
-            botService.sendTextMessage(chatId, notFoundMessage);
+            botService.sendTextMessage(chatId, "Нет доступных медиа.");
             return;
         }
 
-        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup(new ArrayList<>());
-        for (var media : mediaList) {
-            if (asList) {
-                keyboardMarkup = MessageFormattingUtil.getMediaKeyboard(keyboardMarkup, media);
-                botService.sendKeyboardMessage(chatId, keyboardMarkup);
-            } else {
-                if (media.getCoverImageUrl() != null) {
-                    String mediaCaption = MessageFormattingUtil.formatMedia(media);
-                    botService.sendImageWithCaptionMessage(chatId, media.getCoverImageUrl(), mediaCaption);
-                } else {
-                    botService.sendTextMessage(chatId, MessageFormattingUtil.formatMedia(media));
-                }
+        if (asList) {
+            InlineKeyboardMarkup keyboardMarkup = KeyboardStorage.getMediaListKeyboard(mediaList);
+            botService.sendKeyboardMessage(chatId, keyboardMarkup);
+        } else {
+            for (var media : mediaList) {
+                botService.sendMediaMessage(chatId, media);
             }
         }
-
     }
+
 }

@@ -2,8 +2,9 @@ package org.example.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.bot.command.Commands;
-import org.example.bot.keyboard.KeyboardStorage;
+
 import org.example.model.Media;
+import org.example.utils.MessageFormattingUtil;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -54,12 +55,21 @@ public class BotService {
 
     public void sendKeyboardMessage(String chatId, InlineKeyboardMarkup inlineKeyboardMarkup) {
         try {
-            SendMessage sendMessage = new SendMessage(chatId, "Вот фильмы ");
+            SendMessage sendMessage = new SendMessage(chatId, "Вот фильмы: ");
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             sendMessage.enableMarkdown(true);
             telegramClient.execute(sendMessage);
         } catch (TelegramApiException exception) {
             log.error("Ошибка при отправке клавиатуры: {}", exception.getMessage());
+        }
+    }
+
+    public void sendMediaMessage(String chatId, Media media) {
+        if (media.getCoverImageUrl() != null) {
+            String mediaCaption = MessageFormattingUtil.formatMedia(media);
+            sendImageWithCaptionMessage(chatId, media.getCoverImageUrl(), mediaCaption);
+        } else {
+            sendTextMessage(chatId, MessageFormattingUtil.formatMedia(media));
         }
     }
 }

@@ -5,7 +5,11 @@ import org.example.model.Media;
 import org.example.model.enums.MediaType;
 import org.example.repository.MediaRepository;
 import org.example.utils.HibernateUtil;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor

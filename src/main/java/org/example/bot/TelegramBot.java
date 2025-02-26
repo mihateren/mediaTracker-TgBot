@@ -3,6 +3,7 @@ package org.example.bot;
 import org.example.bot.callback.CallbackQueryHandler;
 import org.example.controller.BotController;
 import org.example.service.BotService;
+import org.example.service.MediaService;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -14,7 +15,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     public TelegramBot(String apiKey) {
         BotService telegramBotService = new BotService(apiKey);
         this.callbackQueryHandler = new CallbackQueryHandler(apiKey);
-        this.botController = new BotController(telegramBotService);
+        this.botController = new BotController(telegramBotService, new MediaService());
     }
 
     @Override

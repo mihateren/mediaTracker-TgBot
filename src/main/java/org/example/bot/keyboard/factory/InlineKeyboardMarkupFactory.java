@@ -1,26 +1,13 @@
-package org.example.bot.keyboard;
+package org.example.bot.keyboard.factory;
 
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InlineButtonFactory {
-    // Кнопка с текстом и колбэком
-    public static InlineKeyboardButton createButton(String text, String callbackData) {
-        InlineKeyboardButton button = new InlineKeyboardButton(text);
-        button.setCallbackData(callbackData);
-        return button;
-    }
-
-    // Кнопка с url
-    public static InlineKeyboardButton createUrlButton(String text, String url) {
-        InlineKeyboardButton button = new InlineKeyboardButton(text);
-        button.setUrl(url);
-        return button;
-    }
+public class InlineKeyboardMarkupFactory {
 
     // Клавиатура с одной кнопкой
     public static InlineKeyboardMarkup createSingleButtonKeyboard(InlineKeyboardButton button) {

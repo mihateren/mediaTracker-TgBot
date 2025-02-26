@@ -17,10 +17,6 @@ public class MediaService {
         mediaRepository.save(media);
     }
 
-    public Media getById(Long id) {
-        return mediaRepository.getById(id);
-    }
-
     public List<Media> getAllMedia(MediaType typeOfMedia) {
         if (typeOfMedia == MediaType.FILM) {
             return mediaRepository.getAllFilms();
@@ -28,6 +24,14 @@ public class MediaService {
             return mediaRepository.getAllSeries();
         }
         return List.of();
+    }
+
+    public Media getMediaById(Long id) {
+        return mediaRepository.getById(id);
+    }
+
+    public void editMedia(Media media) {
+        mediaRepository.edit(media);
     }
 
     public void delete(Media media) {

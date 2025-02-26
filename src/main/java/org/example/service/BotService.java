@@ -2,12 +2,17 @@ package org.example.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.bot.command.Commands;
+import org.example.bot.keyboard.KeyboardStorage;
+import org.example.model.Media;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 
 @Slf4j
 public class BotService {
@@ -47,5 +52,14 @@ public class BotService {
         }
     }
 
-
+    public void sendKeyboardMessage(String chatId, InlineKeyboardMarkup inlineKeyboardMarkup) {
+        try {
+            SendMessage sendMessage = new SendMessage(chatId, "Вот фильмы ");
+            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+            sendMessage.enableMarkdown(true);
+            telegramClient.execute(sendMessage);
+        } catch (TelegramApiException exception) {
+            log.error("Ошибка при отправке клавиатуры: {}", exception.getMessage());
+        }
+    }
 }

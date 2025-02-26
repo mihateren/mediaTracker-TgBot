@@ -1,4 +1,4 @@
 package org.example.controller;
 
-public class MovieController {
+public class MediaController {
 }

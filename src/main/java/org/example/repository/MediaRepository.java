@@ -21,9 +21,9 @@ public class MediaRepository {
             session.beginTransaction();
             session.save(media);
             session.getTransaction().commit();
-        } catch (HibernateException e) {
-            log.error("Error saving media", e);
-            throw e;  // Можно пробросить или обработать ошибку
+        } catch (HibernateException exception) {
+            log.error("Error saving media", exception);
+            throw exception; 
         }
     }
 
@@ -31,41 +31,41 @@ public class MediaRepository {
         try (Session session = sessionFactory.openSession()) {
             Media media = session.get(Media.class, id);
             if (media != null) {
-                 Hibernate.initialize(media.getGenres());  // Если нужно
+                 Hibernate.initialize(media.getGenres()); 
             }
             return media;
-        } catch (HibernateException e) {
-            log.error("Error fetching media by ID", e);
-            throw e;
+        } catch (HibernateException exception) {
+            log.error("Error fetching media by ID", exception);
+            throw exception;
         }
     }
 
     public List<Media> getAllSeries() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Media where type = 'SERIES'", Media.class).list();
-        } catch (HibernateException e) {
-            log.error("Error fetching all media", e);
-            throw e;
+        } catch (HibernateException exception) {
+            log.error("Error fetching all media", exception);
+            throw exception;
         }
     }
 
     public List<Media> getAllFilms() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Media where type = 'FILM'", Media.class).list();
-        } catch (HibernateException e) {
-            log.error("Error fetching all media", e);
-            throw e;
+        } catch (HibernateException exception) {
+            log.error("Error fetching all media", exception);
+            throw exception;
         }
     }
 
-    public void update(Media media) {
+    public void edit(Media media) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.merge(media);  // Используем merge для правильной работы с сущностями
+            session.merge(media);
             session.getTransaction().commit();
-        } catch (HibernateException e) {
-            log.error("Error updating media", e);
-            throw e;
+        } catch (HibernateException exception) {
+            log.error("Error updating media", exception);
+            throw exception;
         }
     }
 
@@ -74,9 +74,9 @@ public class MediaRepository {
             session.beginTransaction();
             session.delete(media);
             session.getTransaction().commit();
-        } catch (HibernateException e) {
-            log.error("Error deleting media", e);
-            throw e;
+        } catch (HibernateException exception) {
+            log.error("Error deleting media", exception);
+            throw exception;
         }
     }
 }

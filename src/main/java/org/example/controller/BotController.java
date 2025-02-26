@@ -8,6 +8,10 @@ import org.example.service.BotService;
 import org.example.service.MediaService;
 import org.example.utils.MessageFormattingUtil;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+
+
+import java.util.ArrayList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,10 +39,16 @@ public class BotController {
                     botService.sendHelpMessage(chatId);
                     break;
                 case GET_ALL_SERIES:
-                    handleGetAllMedia(MediaType.SERIES, chatId);
+                    handleGetAllMedia(MediaType.SERIES, chatId, false);
                     break;
                 case GET_ALL_FILMS:
-                    handleGetAllMedia(MediaType.FILM, chatId);
+                    handleGetAllMedia(MediaType.FILM, chatId, false);
+                    break;
+                case GET_ALL_SERIES_AS_LIST:
+                    handleGetAllMedia(MediaType.SERIES, chatId, true);
+                    break;
+                case GET_ALL_FILMS_AS_LIST:
+                    handleGetAllMedia(MediaType.FILM, chatId, true);
                     break;
                 case ADD:
                     botService.sendTextMessage(chatId, "Добавление нового фильма...");
@@ -57,7 +67,7 @@ public class BotController {
         }
     }
 
-    private void handleGetAllMedia(MediaType typeOfMedia, String chatId) {
+    private void handleGetAllMedia(MediaType typeOfMedia, String chatId, boolean asList) {
         String searchMessage = MessageFormattingUtil.getSearchMessage(typeOfMedia);
         botService.sendTextMessage(chatId, searchMessage);
 
@@ -68,15 +78,20 @@ public class BotController {
             return;
         }
 
+        InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup(new ArrayList<>());
         for (var media : mediaList) {
-            if (media.getCoverImageUrl() != null) {
-                String mediaCaption = MessageFormattingUtil.formatMedia(media);
-                botService.sendImageWithCaptionMessage(chatId, media.getCoverImageUrl(), mediaCaption);
+            if (asList) {
+                keyboardMarkup = MessageFormattingUtil.getMediaKeyboard(keyboardMarkup, media);
+                botService.sendKeyboardMessage(chatId, keyboardMarkup);
             } else {
-                botService.sendTextMessage(chatId, MessageFormattingUtil.formatMedia(media));
+                if (media.getCoverImageUrl() != null) {
+                    String mediaCaption = MessageFormattingUtil.formatMedia(media);
+                    botService.sendImageWithCaptionMessage(chatId, media.getCoverImageUrl(), mediaCaption);
+                } else {
+                    botService.sendTextMessage(chatId, MessageFormattingUtil.formatMedia(media));
+                }
             }
         }
+
     }
-
-
 }
